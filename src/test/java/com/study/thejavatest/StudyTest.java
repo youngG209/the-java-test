@@ -1,13 +1,37 @@
 package com.study.thejavatest;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.condition.*;
 
 import java.time.Duration;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.*;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class StudyTest {
+
+    @BeforeAll
+    static void beforeAll() {
+        System.out.println("BeforeAll!");
+    }
+
+    @AfterAll
+    static void afterAll() {
+        System.out.println("AfterAll!");
+    }
+
+    @BeforeEach
+    void setUp() {
+        System.out.println("BeforeEach!");
+    }
+
+    @AfterEach
+    void tearDown() {
+        System.out.println("AfterEach!");
+    }
+
 
     @DisplayName("스터디 만들기")
     @Test
@@ -45,23 +69,55 @@ class StudyTest {
 //        });
     }
 
-    @BeforeAll
-    static void beforeAll() {
-        System.out.println("BeforeAll!");
+    @Test
+    void assumeTrueTest() {
+        String test_env = System.getenv("TEST_ENV");
+        System.out.println(test_env);
+        assumeTrue("LOCAL".equalsIgnoreCase(test_env));
+
+        Study study = new Study(10);
+        assertThat(study.getLimit()).isGreaterThan(0);
     }
 
-    @AfterAll
-    static void afterAll() {
-        System.out.println("AfterAll!");
+    @Test
+    void assumeThatTest() {
+        String test_env = System.getenv("TEST_ENV");
+
+        assumingThat("LOCAL".equalsIgnoreCase(test_env),
+                () -> {
+                    System.out.println("local");
+                    Study study = new Study(10);
+                    assertThat(study.getLimit()).isGreaterThan(0);
+                });
+        assumingThat("DEV".equalsIgnoreCase(test_env),
+                () -> {
+                    System.out.println("dev");
+                    Study study = new Study(20);
+                    assertThat(study.getLimit()).isGreaterThan(0);
+                });
     }
 
-    @BeforeEach
-    void setUp() {
-        System.out.println("BeforeEach!");
+    @Test
+    @EnabledOnOs(OS.WINDOWS)
+    void enabledOnOsTest() {
+        System.out.println("EnabledOnOs");
     }
 
-    @AfterEach
-    void tearDown() {
-        System.out.println("AfterEach!");
+    @Test
+    @DisabledOnOs(OS.WINDOWS)
+    void disabledOnOsTest() {
+        System.out.println("DisabledOnOs");
+    }
+
+    @Test
+    @EnabledOnJre(JRE.JAVA_8)
+    void enabledOnJreTest() {
+        System.out.println("JAVA_8");
+    }
+
+    @Test
+    @EnabledOnJre(JRE.OTHER)
+    void disabledOnJreTest() {
+        System.out.println("JRE_OTHER");
     }
 }

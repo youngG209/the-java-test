@@ -2,7 +2,7 @@ package com.study.thejavatest;
 
 public class Study {
 
-    private StudyStatus status;
+    private StudyStatus status = StudyStatus.DRAFT;
     private int limit;
 
     public Study(int limit) {

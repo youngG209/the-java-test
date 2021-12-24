@@ -2,7 +2,9 @@ package com.study.thejavatest;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.aggregator.AggregateWith;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
@@ -19,16 +21,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.*;
 
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-class StudyTest {
+//@ExtendWith(FindSlowTestExtension.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+class JUnit5StudyTest {
+
+    @RegisterExtension
+    static FindSlowTestExtension findSlowTestExtension = new FindSlowTestExtension(1000L);
+
+    int value = 1;
 
     @BeforeAll
-    static void beforeAll() {
+    void beforeAll() {
         System.out.println("BeforeAll!");
     }
 
     @AfterAll
-    static void afterAll() {
+    void afterAll() {
         System.out.println("AfterAll!");
     }
 
@@ -45,7 +53,7 @@ class StudyTest {
     @DisplayName("스터디 만들기")
     @Test
     void assertAllTest() {
-        Study study = new Study(-1);
+        Study study = new Study(1);
 
         assertAll(
                 () -> assertNotNull(study),
@@ -63,6 +71,7 @@ class StudyTest {
     }
 
     @Test
+    @Disabled
     void assertTimeoutTest() {
 //        assertTimeout(Duration.ofMillis(10), () -> new Study(-10));
         assertTimeout(Duration.ofMillis(10), () -> {
@@ -271,6 +280,26 @@ class StudyTest {
                     accessor.getString(1));
             return study;
         }
+    }
+
+    @Order(1)
+    @Test
+    void instence_Check1() {
+        System.out.println(this);
+        System.out.println(value++);
+    }
+
+    @Order(2)
+    @Test
+    void instence_Check2() {
+        System.out.println(this);
+        System.out.println(value++);
+    }
+
+    @Order(1)
+    @Test
+    void extensionTest() throws InterruptedException {
+        Thread.sleep(1000L);
     }
 
 }

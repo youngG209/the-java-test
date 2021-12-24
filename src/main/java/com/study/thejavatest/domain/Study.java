@@ -1,10 +1,13 @@
-package com.study.thejavatest;
+package com.study.thejavatest.domain;
+
+import com.study.thejavatest.StudyStatus;
 
 public class Study {
 
     private StudyStatus status = StudyStatus.DRAFT;
     private int limit;
     private String name;
+    private Member owner;
 
 
     public Study() {
@@ -42,5 +45,13 @@ public class Study {
                 ", limit=" + limit +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    public void setOwner(Member owner) {
+        this.owner = owner;
+    }
+
+    public Member getOwner() {
+        return owner;
     }
 }
